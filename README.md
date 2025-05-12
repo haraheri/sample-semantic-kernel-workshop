@@ -93,7 +93,7 @@ Master the creation and orchestration of AI agents:
 - `02.1-agents.ipynb`: Creating and configuring agents
 - `02.2-agents-chats.ipynb`: Inter-agent communication and complex patterns
 
-### 02. Semantic Kernel with MCP
+### 03. Semantic Kernel with MCP
 
 Learn to how to connect an SK Agent to MCP:
 - Running your MCP server
