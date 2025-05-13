@@ -26,11 +26,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Get Azure OpenAI credentials
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+deployment_name = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT_NAME")
 api_key = os.getenv("AZURE_OPENAI_API_KEY")
 base_url = os.getenv("AZURE_OPENAI_ENDPOINT")
 embedding_deployment = os.getenv(
-    "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-ada-002"
+    "AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME", "text-embedding-ada-002"
 )
 
 # Initialize memory store
