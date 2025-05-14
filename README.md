@@ -61,10 +61,6 @@ AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
 AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
 AZURE_OPENAI_API_KEY=xxxxxxxxxxx
 AZURE_OPENAI_API_VERSION=2025-03-01-preview
-
-## Optional for RAG with Azure AI Search
-AZURE_AI_SEARCH_ENDPOINT=https://xxxxxxxxxx.search.windows.net
-AZURE_AI_SEARCH_API_KEY=xxxxxxxxx
 ```
 
 ### 01. Introduction to Semantic Kernel
@@ -164,11 +160,11 @@ semantic-kernel-workshop/
 
 4. Add your Azure OpenAI credentials to the `.env` file:
    ```
-   AZURE_OPENAI_DEPLOYMENT=your-deployment-name
-   AZURE_OPENAI_API_KEY=your-api-key 
-   AZURE_OPENAI_ENDPOINT=your-azure-endpoint
-   AZURE_OPENAI_API_VERSION=2024-02-15-preview
-   AZURE_OPENAI_EMBEDDING_DEPLOYMENT=your-embedding-deployment
+   AZURE_OPENAI_ENDPOINT=https://xxxxxx.openai.azure.com/
+   AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
+   AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
+   AZURE_OPENAI_API_KEY=xxxxxxxxxxx
+   AZURE_OPENAI_API_VERSION=2025-03-01-preview
    ```
 
 5. Start with the first notebook:
