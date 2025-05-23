@@ -11,5 +11,5 @@ dependencies = [
     "mermaid-py>=0.7.1",
     "python-dotenv==1.0.1",
     "rich>=14.0.0",
-    "semantic-kernel[azure]==1.29.0",
+    "semantic-kernel[azure]==1.31.0",
 ]

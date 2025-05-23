@@ -48,20 +48,49 @@ uv sync --prerelease=allow
 ```
 >OBS! At the time of writing the workshop depends on the prerelease libraries. 
 
+## Getting Started
+
+1. Clone this repository
+
+1. Create a virtual environment:
+   
+   **Linux/macOS:**
+   ```bash
+   # Create a virtual environment
+   python -m venv venv
+   
+   # Activate the virtual environment
+   source venv/bin/activate
+   ```
+   
+   **Windows:**
+   ```cmd
+   # Create a virtual environment
+   python -m venv venv
+   
+   # Activate the virtual environment
+   venv\Scripts\activate
+   ```
+
+1. Copy the environment variables template:
+   ```bash
+   cp .env.example .env
+   ```
+
+1. Add your Azure OpenAI credentials to the `.env` file:
+   ```
+   AZURE_OPENAI_ENDPOINT=https://xxxxxx.openai.azure.com/
+   AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
+   AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
+   AZURE_OPENAI_API_KEY=xxxxxxxxxxx
+   AZURE_OPENAI_API_VERSION=2025-03-01-preview
+   ```
+
+1. Start with the first notebook:
+   - Begin with `01-intro-to-semantic-kernel/01-intro.ipynb`, which includes instructions for installing Semantic Kernel and other required packages.
+
+
 ## Workshop Modules
-
-### 00. Setup
-
-Copy `.env.example` to `.env` and update it, so it points to your Azure OpenAI and Azure Search instance.
-
-Example:
-```
-AZURE_OPENAI_ENDPOINT=https://xxxxxx.openai.azure.com/
-AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
-AZURE_OPENAI_API_KEY=xxxxxxxxxxx
-AZURE_OPENAI_API_VERSION=2025-03-01-preview
-```
 
 ### 01. Introduction to Semantic Kernel
 
@@ -129,57 +158,9 @@ semantic-kernel-workshop/
 └── .env.example                 # Environment variables template
 ```
 
-## Getting Started
-
-1. Clone this repository
-
-2. Create a virtual environment:
-   
-   **Linux/macOS:**
-   ```bash
-   # Create a virtual environment
-   python -m venv venv
-   
-   # Activate the virtual environment
-   source venv/bin/activate
-   ```
-   
-   **Windows:**
-   ```cmd
-   # Create a virtual environment
-   python -m venv venv
-   
-   # Activate the virtual environment
-   venv\Scripts\activate
-   ```
-
-3. Copy the environment variables template:
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Add your Azure OpenAI credentials to the `.env` file:
-   ```
-   AZURE_OPENAI_ENDPOINT=https://xxxxxx.openai.azure.com/
-   AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
-   AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
-   AZURE_OPENAI_API_KEY=xxxxxxxxxxx
-   AZURE_OPENAI_API_VERSION=2025-03-01-preview
-   ```
-
-5. Start with the first notebook:
-   - Begin with `01-intro-to-semantic-kernel/01-intro.ipynb`, which includes instructions for installing Semantic Kernel and other required packages.
-
 ## Learning Path
 
-For optimal learning, follow this progression:
-
-1. **Foundational Concepts**: Start with `01-intro.ipynb` to understand the core components
-2. **Memory Implementation**: Explore `02-memory.ipynb` to see how semantic memory works
-3. **Basic Agents**: Create your first agents in `02.1-agents.ipynb`
-4. **Advanced Agent Patterns**: Study complex agent interactions in `02.2-agents-chats.ipynb`
-5. **Process Framework**: Learn structured workflows with `03.1-intro-to-processes.ipynb`
-6. **Practical Application**: Apply everything in the interactive playground
+For optimal learning, follow the repository's folders in numerical order.
 
 ## Advanced Topics and Resources
 
