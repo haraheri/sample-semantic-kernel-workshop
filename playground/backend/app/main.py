@@ -1,7 +1,16 @@
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import memory, functions, weather, agents, filters, kernel, process
+from app.api import (
+    memory,
+    functions,
+    weather,
+    agents,
+    filters,
+    kernel,
+    process,
+    code_review,
+)
 
 # Configure logging
 logging.basicConfig(
@@ -28,6 +37,7 @@ app.include_router(agents.router)
 app.include_router(filters.router)
 app.include_router(kernel.router)
 app.include_router(process.router)
+app.include_router(code_review.router)
 
 
 # Root endpoint
