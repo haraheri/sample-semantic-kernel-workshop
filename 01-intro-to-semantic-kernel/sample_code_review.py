@@ -1,50 +1,53 @@
 # sample_code_review.py
 
-import sys
-import os
 import asyncio
+import os
 
-from semantic_kernel.kernel import Kernel
+from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
-async def review_code(code: str) -> str:
-    # 非同期でAIにレビューを依頼
-    kernel = Kernel()
-    kernel.add_service(AzureChatCompletion())  # .env で設定済み
+
+async def run_review() -> None:
+    """Interactively ask for a file path and review its contents."""
 
     prompt = """
-あなたは熟練のソフトウェアエンジニアです。以下のコードをレビューしてください。
-- 改善点・バグ・非効率な箇所があれば日本語で指摘してください
-- 必要に応じて具体的な修正例も提示してください
-
-# レビュー対象コード
-{{$input}}
+あなたは熟練のソフトウェアエンジニアです。ユーザーが指定するコードをレビューし、
+改善点やバグ、非効率な箇所、セキュリティ上の懸念点を日本語で指摘してください。
+パフォーマンスやコードスタイル、可読性にも注意し、必要に応じてテスト不足やエッジケースの漏れも指摘してください。
+より良い実装例がある場合はコードスニペットを用いて具体的に提案してください。
+まずはレビューするファイルのパスを尋ねてください。
 """
-    # invoke は await が必要
-    result = await kernel.invoke(
-        prompt_template=prompt,
-        input_variables={"input": code},
-        max_tokens=1000,
-        temperature=0.2,
+
+    agent = ChatCompletionAgent(
+        service=AzureChatCompletion(),
+        name="code_reviewer",
+        instructions=(prompt),
     )
-    return result
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python sample_code_review.py <target_file>")
-        sys.exit(1)
+    thread = ChatHistoryAgentThread()
 
-    target_file = sys.argv[1]
-    if not os.path.exists(target_file):
-        print(f"File not found: {target_file}")
-        sys.exit(1)
+    response = await agent.get_response(
+        messages="コードレビューを始めます。レビューするファイルのパスを教えてください。",
+        thread=thread,
+    )
+    print(f"Agent: {response.content}")
 
-    with open(target_file, "r", encoding="utf-8") as f:
-        code = f.read()
+    while True:
+        user_input = input("User: ").strip()
 
-    # asyncio.run でコルーチンを実行
-    review = asyncio.run(review_code(code))
-    print(review)
+        if not os.path.isfile(user_input):
+            response = await agent.get_response(messages=user_input, thread=thread)
+            print(f"Agent: {response.content}")
+            continue
+
+        with open(user_input, "r", encoding="utf-8") as f:
+            code = f.read()
+
+        review_prompt = f"以下のコードをレビューしてください:\n{code}"
+        response = await agent.get_response(messages=review_prompt, thread=thread)
+        print(f"Agent: {response.content}")
+        break
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run_review())
