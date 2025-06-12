@@ -3,8 +3,16 @@
 import asyncio
 import os
 
-from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
+from semantic_kernel.agents import (
+    AgentGroupChat,
+    ChatCompletionAgent,
+)
+from semantic_kernel.agents.strategies import (
+    DefaultTerminationStrategy,
+    SequentialSelectionStrategy,
+)
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+from semantic_kernel.contents.chat_history import ChatHistory
 
 
 async def run_review() -> None:
@@ -18,34 +26,54 @@ async def run_review() -> None:
 まずはレビューするファイルのパスを尋ねてください。
 """
 
-    agent = ChatCompletionAgent(
+    style_agent = ChatCompletionAgent(
         service=AzureChatCompletion(),
-        name="code_reviewer",
-        instructions=(prompt),
+        name="StyleReviewer",
+        instructions=prompt + "\nあなたの役割はコードスタイルと可読性に焦点を当てて指摘することです。",
     )
 
-    thread = ChatHistoryAgentThread()
-
-    response = await agent.get_response(
-        messages="コードレビューを始めます。レビューするファイルのパスを教えてください。",
-        thread=thread,
+    bug_agent = ChatCompletionAgent(
+        service=AzureChatCompletion(),
+        name="BugReviewer",
+        instructions=prompt + "\nあなたの役割はバグや論理的誤りを見つけて指摘することです。",
     )
-    print(f"Agent: {response.content}")
+
+    security_agent = ChatCompletionAgent(
+        service=AzureChatCompletion(),
+        name="SecurityReviewer",
+        instructions=prompt + "\nあなたの役割はセキュリティ上の問題点に焦点を当てて指摘することです。",
+    )
+
+    group_chat = AgentGroupChat(
+        agents=[style_agent, bug_agent, security_agent],
+        selection_strategy=SequentialSelectionStrategy(),
+        termination_strategy=DefaultTerminationStrategy(maximum_iterations=3),
+    )
+
+    group_chat.history = ChatHistory()
+
+    await group_chat.add_chat_message("コードレビューを始めます。レビューするファイルのパスを教えてください。")
+    async for response in group_chat.invoke():
+        print(f"{response.name}: {response.content}")
+    group_chat.is_complete = False
 
     while True:
         user_input = input("User: ").strip()
 
         if not os.path.isfile(user_input):
-            response = await agent.get_response(messages=user_input, thread=thread)
-            print(f"Agent: {response.content}")
+            await group_chat.add_chat_message(user_input)
+            async for response in group_chat.invoke():
+                print(f"{response.name}: {response.content}")
+            group_chat.is_complete = False
             continue
 
         with open(user_input, "r", encoding="utf-8") as f:
             code = f.read()
 
         review_prompt = f"以下のコードをレビューしてください:\n{code}"
-        response = await agent.get_response(messages=review_prompt, thread=thread)
-        print(f"Agent: {response.content}")
+        await group_chat.add_chat_message(review_prompt)
+        async for response in group_chat.invoke():
+            print(f"{response.name}: {response.content}")
         break
 
 
